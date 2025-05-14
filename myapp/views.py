@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth.models import User
-from .models import Car, Booking, UserProfile
+from .models import Car, UserProfile
 from django.core.paginator import Paginator
 from datetime import datetime
 from decimal import Decimal
@@ -19,51 +19,6 @@ def about(request):
 def car_detail(request, car_id):
     car = get_object_or_404(Car, id=car_id)
     return render(request, 'myapp/car_detail.html', {'car': car})
-
-@login_required
-def book_car(request, car_id):
-    car = get_object_or_404(Car, id=car_id)
-    
-    if request.method == 'POST':
-        start_date = datetime.strptime(request.POST['start_date'], '%Y-%m-%d').date()
-        end_date = datetime.strptime(request.POST['end_date'], '%Y-%m-%d').date()
-        
-        # Calculate total days and price
-        days = (end_date - start_date).days
-        total_price = car.price_per_day * Decimal(days)
-        
-        # Create booking
-        Booking.objects.create(
-            user=request.user,
-            car=car,
-            start_date=start_date,
-            end_date=end_date,
-            total_price=total_price
-        )
-        
-        messages.success(request, 'Car booked successfully!')
-        return redirect('bookings')
-    
-    return render(request, 'myapp/book_car.html', {'car': car})
-
-@login_required
-def bookings(request):
-    bookings = Booking.objects.filter(user=request.user).order_by('-created_at')
-    return render(request, 'myapp/bookings.html', {'bookings': bookings})
-
-@login_required
-def booking_detail(request, booking_id):
-    booking = get_object_or_404(Booking, id=booking_id, user=request.user)
-    return render(request, 'myapp/booking_detail.html', {'booking': booking})
-
-@login_required
-def cancel_booking(request, booking_id):
-    booking = get_object_or_404(Booking, id=booking_id, user=request.user)
-    if booking.status == 'pending':
-        booking.status = 'cancelled'
-        booking.save()
-        messages.success(request, 'Booking cancelled successfully!')
-    return redirect('bookings')
 
 def register(request):
     if request.method == 'POST':
@@ -83,9 +38,7 @@ def profile(request):
         profile = request.user.userprofile
     except UserProfile.DoesNotExist:
         profile = UserProfile.objects.create(user=request.user)
-    
-    bookings = Booking.objects.filter(user=request.user).order_by('-created_at')[:5]
-    return render(request, 'myapp/profile.html', {'profile': profile, 'bookings': bookings})
+    return render(request, 'myapp/profile.html', {'profile': profile})
 
 @login_required
 def edit_profile(request):
