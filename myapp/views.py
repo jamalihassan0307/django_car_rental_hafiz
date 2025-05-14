@@ -79,7 +79,7 @@ def cars_view(request):
         'cars': cars,
         'is_admin': is_admin_user
     }
-    return render(request, 'cars.html', context)
+    return render(request, 'myapp/cars.html', context)
 
 @login_required
 def add_car(request):
@@ -106,7 +106,7 @@ def add_car(request):
         messages.success(request, 'Car added successfully!')
         return redirect('cars')
     
-    return render(request, 'add_car.html')
+    return render(request, 'myapp/add_car.html')
 
 @login_required
 def edit_car(request, car_id):
@@ -130,7 +130,7 @@ def edit_car(request, car_id):
         messages.success(request, 'Car updated successfully!')
         return redirect('cars')
     
-    return render(request, 'edit_car.html', {'car': car})
+    return render(request, 'myapp/edit_car.html', {'car': car})
 
 @login_required
 def delete_car(request, car_id):
