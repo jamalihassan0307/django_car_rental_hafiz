@@ -120,20 +120,75 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1px;
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
     border: none;
     border-radius: 8px;
     color: white;
     cursor: pointer;
     transition: all 0.3s ease;
     text-align: center;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
     text-decoration: none;
+    box-shadow: 0 4px 6px rgba(76, 175, 80, 0.2);
 }
 
 .profile-actions .btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(var(--primary-rgb), 0.3);
+    box-shadow: 0 6px 15px rgba(76, 175, 80, 0.4);
+    background: linear-gradient(135deg, #45a049 0%, #388E3C 100%);
+}
+
+.profile-actions .btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+.profile-actions .btn i {
+    font-size: 1.2rem;
+}
+
+/* Add these new button variations */
+.btn-primary {
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    box-shadow: 0 4px 6px rgba(76, 175, 80, 0.2);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #45a049 0%, #388E3C 100%);
+    box-shadow: 0 6px 15px rgba(76, 175, 80, 0.4);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+    box-shadow: 0 4px 6px rgba(33, 150, 243, 0.2);
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%);
+    box-shadow: 0 6px 15px rgba(33, 150, 243, 0.4);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+    box-shadow: 0 4px 6px rgba(244, 67, 54, 0.2);
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #d32f2f 0%, #c62828 100%);
+    box-shadow: 0 6px 15px rgba(244, 67, 54, 0.4);
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, #FFC107 0%, #FFA000 100%);
+    box-shadow: 0 4px 6px rgba(255, 193, 7, 0.2);
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, #FFA000 0%, #FF8F00 100%);
+    box-shadow: 0 6px 15px rgba(255, 193, 7, 0.4);
 }
 
 /* Profile Content */
