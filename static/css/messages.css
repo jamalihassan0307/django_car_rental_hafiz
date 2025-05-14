@@ -1,0 +1,177 @@
+.messages {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    width: 350px;
+    max-width: calc(100% - 40px);
+}
+
+.alert {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    animation: slideIn 0.5s ease forwards;
+    position: relative;
+    overflow: hidden;
+}
+
+.alert::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+}
+
+.alert i {
+    font-size: 1.5rem;
+}
+
+.alert-success {
+    background: #E8F5E9;
+    color: #2E7D32;
+    border: 1px solid #A5D6A7;
+}
+
+.alert-success::before {
+    background: #4CAF50;
+}
+
+.alert-success i {
+    color: #4CAF50;
+}
+
+.alert-error {
+    background: #FFEBEE;
+    color: #C62828;
+    border: 1px solid #FFCDD2;
+}
+
+.alert-error::before {
+    background: #F44336;
+}
+
+.alert-error i {
+    color: #F44336;
+}
+
+.alert-warning {
+    background: #FFF3E0;
+    color: #EF6C00;
+    border: 1px solid #FFE0B2;
+}
+
+.alert-warning::before {
+    background: #FF9800;
+}
+
+.alert-warning i {
+    color: #FF9800;
+}
+
+.alert-info {
+    background: #E3F2FD;
+    color: #1565C0;
+    border: 1px solid #BBDEFB;
+}
+
+.alert-info::before {
+    background: #2196F3;
+}
+
+.alert-info i {
+    color: #2196F3;
+}
+
+.alert-close {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+}
+
+.alert-close:hover {
+    opacity: 1;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.alert.hiding {
+    animation: slideOut 0.5s ease forwards;
+}
+
+/* Dark mode support */
+.dark-mode .alert {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .alert-success {
+    background: rgba(46, 125, 50, 0.1);
+    color: #81C784;
+    border-color: #2E7D32;
+}
+
+.dark-mode .alert-error {
+    background: rgba(198, 40, 40, 0.1);
+    color: #EF5350;
+    border-color: #C62828;
+}
+
+.dark-mode .alert-warning {
+    background: rgba(239, 108, 0, 0.1);
+    color: #FFB74D;
+    border-color: #EF6C00;
+}
+
+.dark-mode .alert-info {
+    background: rgba(21, 101, 192, 0.1);
+    color: #64B5F6;
+    border-color: #1565C0;
+}
+
+/* Responsive design */
+@media (max-width: 576px) {
+    .messages {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        width: auto;
+    }
+    
+    .alert {
+        padding: 0.75rem;
+    }
+    
+    .alert i {
+        font-size: 1.25rem;
+    }
+} 

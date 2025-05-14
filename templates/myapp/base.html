@@ -8,6 +8,7 @@
     
     <!-- CSS Files -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/messages.css' %}">
     {% block extra_css %}{% endblock %}
     
     <!-- Font Awesome -->
@@ -84,13 +85,25 @@
     
     <!-- Messages -->
     {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        </div>
+    <div class="messages">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                {% if message.tags == 'success' %}
+                    <i class="fas fa-check-circle"></i>
+                {% elif message.tags == 'error' %}
+                    <i class="fas fa-exclamation-circle"></i>
+                {% elif message.tags == 'warning' %}
+                    <i class="fas fa-exclamation-triangle"></i>
+                {% elif message.tags == 'info' %}
+                    <i class="fas fa-info-circle"></i>
+                {% endif %}
+                <div class="alert-content">{{ message }}</div>
+                <button type="button" class="alert-close" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        {% endfor %}
+    </div>
     {% endif %}
     
     <!-- Main Content -->
@@ -149,6 +162,37 @@
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script src="{% static 'js/main.js' %}"></script>
     {% block extra_js %}{% endblock %}
+
+    <!-- JavaScript for auto-dismissing messages -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const messages = document.querySelectorAll('.alert');
+        messages.forEach(message => {
+            // Auto dismiss after 5 seconds
+            setTimeout(() => {
+                message.classList.add('hiding');
+                setTimeout(() => {
+                    message.remove();
+                }, 500);
+            }, 5000);
+
+            // Add hover pause functionality
+            let timeoutId;
+            message.addEventListener('mouseenter', () => {
+                clearTimeout(timeoutId);
+            });
+
+            message.addEventListener('mouseleave', () => {
+                timeoutId = setTimeout(() => {
+                    message.classList.add('hiding');
+                    setTimeout(() => {
+                        message.remove();
+                    }, 500);
+                }, 2000);
+            });
+        });
+    });
+    </script>
 
     <style>
     .btn-link {
