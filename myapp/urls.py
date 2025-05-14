@@ -7,7 +7,6 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('about/', views.about, name='about'),
     path('cars/', views.cars_view, name='cars'),
-    path('contact/', views.contact, name='contact'),
     
     # Authentication
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
@@ -28,7 +27,4 @@ urlpatterns = [
     path('bookings/', views.bookings, name='bookings'),
     path('booking/<int:booking_id>/', views.booking_detail, name='booking_detail'),
     path('booking/<int:booking_id>/cancel/', views.cancel_booking, name='cancel_booking'),
-    
-    # Reviews
-    path('car/<int:car_id>/review/', views.add_review, name='add_review'),
 ]
