@@ -2,10 +2,16 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class UserProfile(models.Model):
+    ROLE_CHOICES = (
+        ('admin', 'Admin'),
+        ('user', 'User'),
+    )
+    
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True)
     phone_number = models.CharField(max_length=15, blank=True)
     address = models.TextField(blank=True)
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='user')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -50,23 +56,3 @@ class Booking(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.car.name}"
-
-class Review(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    car = models.ForeignKey(Car, on_delete=models.CASCADE)
-    rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)])
-    comment = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.user.username}'s review for {self.car.name}"
-
-class Contact(models.Model):
-    name = models.CharField(max_length=100)
-    email = models.EmailField()
-    subject = models.CharField(max_length=200)
-    message = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.name} - {self.subject}"
