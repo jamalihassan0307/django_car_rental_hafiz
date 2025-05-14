@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth.models import User
-from .models import Car, Booking, Review, Contact, UserProfile
+from .models import Car, Booking, UserProfile
 from django.core.paginator import Paginator
 from datetime import datetime
 from decimal import Decimal
@@ -16,29 +16,9 @@ def home(request):
 def about(request):
     return render(request, 'myapp/about.html')
 
-def cars(request):
-    car_type = request.GET.get('type', '')
-    price_range = request.GET.get('price', '')
-    
-    cars = Car.objects.filter(is_available=True)
-    
-    if car_type:
-        cars = cars.filter(car_type=car_type)
-    
-    if price_range:
-        min_price, max_price = map(int, price_range.split('-'))
-        cars = cars.filter(price_per_day__gte=min_price, price_per_day__lte=max_price)
-    
-    paginator = Paginator(cars, 6)
-    page = request.GET.get('page')
-    cars = paginator.get_page(page)
-    
-    return render(request, 'myapp/cars.html', {'cars': cars})
-
 def car_detail(request, car_id):
     car = get_object_or_404(Car, id=car_id)
-    reviews = Review.objects.filter(car=car)
-    return render(request, 'myapp/car_detail.html', {'car': car, 'reviews': reviews})
+    return render(request, 'myapp/car_detail.html', {'car': car})
 
 @login_required
 def book_car(request, car_id):
@@ -62,14 +42,14 @@ def book_car(request, car_id):
         )
         
         messages.success(request, 'Car booked successfully!')
-        return redirect('my_bookings')
+        return redirect('bookings')
     
     return render(request, 'myapp/book_car.html', {'car': car})
 
 @login_required
-def my_bookings(request):
+def bookings(request):
     bookings = Booking.objects.filter(user=request.user).order_by('-created_at')
-    return render(request, 'myapp/my_bookings.html', {'bookings': bookings})
+    return render(request, 'myapp/bookings.html', {'bookings': bookings})
 
 @login_required
 def booking_detail(request, booking_id):
@@ -83,46 +63,7 @@ def cancel_booking(request, booking_id):
         booking.status = 'cancelled'
         booking.save()
         messages.success(request, 'Booking cancelled successfully!')
-    return redirect('my_bookings')
-
-@login_required
-def add_review(request, car_id):
-    car = get_object_or_404(Car, id=car_id)
-    
-    if request.method == 'POST':
-        rating = request.POST.get('rating')
-        comment = request.POST.get('comment')
-        
-        Review.objects.create(
-            user=request.user,
-            car=car,
-            rating=rating,
-            comment=comment
-        )
-        
-        messages.success(request, 'Review added successfully!')
-        return redirect('car_detail', car_id=car_id)
-    
-    return render(request, 'myapp/add_review.html', {'car': car})
-
-def contact(request):
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        email = request.POST.get('email')
-        subject = request.POST.get('subject')
-        message = request.POST.get('message')
-        
-        Contact.objects.create(
-            name=name,
-            email=email,
-            subject=subject,
-            message=message
-        )
-        
-        messages.success(request, 'Message sent successfully!')
-        return redirect('contact')
-    
-    return render(request, 'myapp/contact.html')
+    return redirect('bookings')
 
 def register(request):
     if request.method == 'POST':
