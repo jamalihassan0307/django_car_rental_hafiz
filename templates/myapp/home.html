@@ -1,0 +1,99 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block title %}Home - Car Rental Service{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container hero-content">
+        <div class="hero-text" data-aos="fade-right">
+            <span class="subtitle">Welcome to Car Rental</span>
+            <h1>Find Your Perfect Car</h1>
+            <p>Experience the freedom of the road with our premium car rental service. Choose from our wide range of vehicles and start your journey today.</p>
+            <div class="hero-buttons">
+                <a href="{% url 'cars' %}" class="btn primary-btn">View Cars</a>
+                <a href="{% url 'about' %}" class="btn outline-btn">Learn More</a>
+            </div>
+        </div>
+        <div class="hero-image" data-aos="fade-left">
+            <img src="{% static 'assets/banner-car.png' %}" alt="Hero Car">
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="services">
+    <div class="container">
+        <h1 class="section-title" data-aos="fade-up">Our Services</h1>
+        <div class="services-grid">
+            <div class="service-card" data-aos="fade-up" data-aos-delay="100">
+                <i class="fas fa-car"></i>
+                <h2>Wide Car Selection</h2>
+                <p>Choose from our extensive fleet of vehicles to suit your needs.</p>
+                <a href="{% url 'cars' %}" class="learn-more">Learn More</a>
+            </div>
+            <div class="service-card" data-aos="fade-up" data-aos-delay="200">
+                <i class="fas fa-tools"></i>
+                <h2>24/7 Support</h2>
+                <p>Our team is always ready to assist you with any queries.</p>
+                <a href="{% url 'contact' %}" class="learn-more">Contact Us</a>
+            </div>
+            <div class="service-card" data-aos="fade-up" data-aos-delay="300">
+                <i class="fas fa-shield-alt"></i>
+                <h2>Secure Booking</h2>
+                <p>Safe and secure online booking system for your convenience.</p>
+                <a href="{% url 'cars' %}" class="learn-more">Book Now</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Cars Section -->
+<section class="car-list">
+    <div class="container">
+        <h1 class="section-title" data-aos="fade-up">Featured Cars</h1>
+        <div class="cars-grid">
+            {% for car in featured_cars %}
+            <div class="car-card" data-aos="fade-up">
+                <div class="car-image-container">
+                    <img src="{{ car.image.url }}" alt="{{ car.name }}" class="car-image">
+                </div>
+                <div class="car-details">
+                    <h2 class="car-name">{{ car.name }}</h2>
+                    <div class="car-info">
+                        <p class="car-price">${{ car.price_per_day }}/Day</p>
+                        <a href="{% url 'car_detail' car.id %}" class="learn-more">Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'cars' %}" class="btn primary-btn">View All Cars</a>
+        </div>
+    </div>
+</section>
+
+<!-- App Banner Section -->
+<section class="app-banner">
+    <div class="container">
+        <div class="banner-content" data-aos="fade-up">
+            <h1>Download Our Mobile App</h1>
+            <p>Get the best car rental experience with our mobile app. Book cars, manage reservations, and more on the go!</p>
+            <div class="store-buttons">
+                <a href="#"><img src="{% static 'website/app_store.png' %}" alt="App Store"></a>
+                <a href="#"><img src="{% static 'website/play_store.png' %}" alt="Play Store"></a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/main.js' %}"></script>
+{% endblock %} 
