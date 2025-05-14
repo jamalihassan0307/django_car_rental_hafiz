@@ -1,55 +1,83 @@
 {% extends 'myapp/base.html' %}
 {% load static %}
 
+{% block title %}Add New Car - Car Rental Service{% endblock %}
+
+{% block extra_css %}
+<style>
+    .add-car-form {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-control {
+        border-radius: 5px;
+    }
+    
+    .btn-submit {
+        width: 100%;
+        padding: 0.8rem;
+        font-size: 1.1rem;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="text-center">Add New Car</h3>
-                </div>
-                <div class="card-body">
-                    <form method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="form-group mb-3">
-                            <label for="name">Car Name</label>
-                            <input type="text" class="form-control" id="name" name="name" required>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="car_type">Car Type</label>
-                            <select class="form-control" id="car_type" name="car_type" required>
-                                <option value="luxury">Luxury</option>
-                                <option value="sports">Sports</option>
-                                <option value="suv">SUV</option>
-                                <option value="sedan">Sedan</option>
-                            </select>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="description">Description</label>
-                            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="price_per_day">Price Per Day</label>
-                            <input type="number" class="form-control" id="price_per_day" name="price_per_day" step="0.01" required>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="image">Car Image</label>
-                            <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
-                        </div>
-                        <div class="form-group mb-3">
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="is_available" name="is_available" checked>
-                                <label class="form-check-label" for="is_available">Available for Booking</label>
-                            </div>
-                        </div>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary">Add Car</button>
-                        </div>
-                    </form>
+<div class="container">
+    <div class="add-car-form" data-aos="fade-up">
+        <h2 class="text-center mb-4">Add New Car</h2>
+        
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="name">Car Name</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="car_type">Car Type</label>
+                <select class="form-control" id="car_type" name="car_type" required>
+                    <option value="">Select Car Type</option>
+                    <option value="luxury">Luxury</option>
+                    <option value="sports">Sports</option>
+                    <option value="suv">SUV</option>
+                    <option value="sedan">Sedan</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="price_per_day">Price Per Day ($)</label>
+                <input type="number" class="form-control" id="price_per_day" name="price_per_day" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="image">Car Image</label>
+                <input type="file" class="form-control" id="image" name="image" required>
+            </div>
+            
+            <div class="form-group">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="is_available" name="is_available" checked>
+                    <label class="custom-control-label" for="is_available">Available for Rent</label>
                 </div>
             </div>
-        </div>
+            
+            <button type="submit" class="btn btn-primary btn-submit">Add Car</button>
+        </form>
     </div>
 </div>
 {% endblock %} 

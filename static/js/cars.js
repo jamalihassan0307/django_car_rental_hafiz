@@ -11,17 +11,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const carTypeFilter = document.getElementById('carType');
     const priceRangeFilter = document.getElementById('priceRange');
     let cars = [];
+    let retryCount = 0;
+    const maxRetries = 3;
 
-    // Fetch cars from API
+    // Fetch cars from API with retry logic
     async function fetchCars() {
         try {
             const response = await fetch('/api/cars/');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             const data = await response.json();
             cars = data;
             filterAndDisplayCars();
+            retryCount = 0; // Reset retry count on successful fetch
         } catch (error) {
             console.error('Error fetching cars:', error);
-            carsGrid.innerHTML = '<div class="no-cars-found"><p>Error loading cars. Please try again later.</p></div>';
+            if (retryCount < maxRetries) {
+                retryCount++;
+                console.log(`Retrying fetch (${retryCount}/${maxRetries})...`);
+                setTimeout(fetchCars, 1000 * retryCount); // Exponential backoff
+            } else {
+                carsGrid.innerHTML = `
+                    <div class="no-cars-found">
+                        <p>Unable to load cars at the moment. Please try refreshing the page.</p>
+                        <button onclick="window.location.reload()" class="btn btn-primary mt-3">
+                            <i class="fas fa-sync-alt"></i> Refresh Page
+                        </button>
+                    </div>`;
+            }
         }
     }
 
@@ -79,20 +97,32 @@ document.addEventListener('DOMContentLoaded', () => {
                    price <= parseFloat(maxPrice);
         });
 
-        carsGrid.innerHTML = filteredCars.length > 0
-            ? filteredCars.map(car => createCarCard(car)).join('')
-            : '<div class="no-cars-found"><p>No cars match your filters.</p></div>';
+        if (filteredCars.length === 0) {
+            carsGrid.innerHTML = `
+                <div class="no-cars-found">
+                    <p>No cars match your filters.</p>
+                    <button onclick="resetFilters()" class="btn btn-primary mt-3">
+                        <i class="fas fa-filter"></i> Reset Filters
+                    </button>
+                </div>`;
+        } else {
+            carsGrid.innerHTML = filteredCars.map(car => createCarCard(car)).join('');
+        }
 
         // Refresh AOS animations
         AOS.refresh();
     }
 
+    // Reset filters function
+    window.resetFilters = function() {
+        carTypeFilter.value = 'all';
+        priceRangeFilter.value = 'all';
+        filterAndDisplayCars();
+    };
+
     // Event listeners
     carTypeFilter.addEventListener('change', filterAndDisplayCars);
     priceRangeFilter.addEventListener('change', filterAndDisplayCars);
-
-    // Initial load
-    fetchCars();
 
     // Add hover effect to car cards
     carsGrid.addEventListener('mouseover', (e) => {
@@ -114,4 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+
+    // Initial load
+    fetchCars();
 }); 
