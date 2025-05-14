@@ -6,7 +6,7 @@ urlpatterns = [
     # Main pages
     path('', views.home, name='home'),
     path('about/', views.about, name='about'),
-    path('cars/', views.cars, name='cars'),
+    path('cars/', views.cars_view, name='cars'),
     path('contact/', views.contact, name='contact'),
     
     # Authentication
@@ -20,10 +20,12 @@ urlpatterns = [
     
     # Car Management
     path('car/<int:car_id>/', views.car_detail, name='car_detail'),
-    path('car/<int:car_id>/book/', views.book_car, name='book_car'),
+    path('car/add/', views.add_car, name='add_car'),
+    path('car/edit/<int:car_id>/', views.edit_car, name='edit_car'),
+    path('car/delete/<int:car_id>/', views.delete_car, name='delete_car'),
     
     # Booking Management
-    path('bookings/', views.my_bookings, name='my_bookings'),
+    path('bookings/', views.bookings, name='bookings'),
     path('booking/<int:booking_id>/', views.booking_detail, name='booking_detail'),
     path('booking/<int:booking_id>/cancel/', views.cancel_booking, name='cancel_booking'),
     
