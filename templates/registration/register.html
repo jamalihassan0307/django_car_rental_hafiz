@@ -1,0 +1,168 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block title %}Register - Car Rental Service{% endblock %}
+
+{% block extra_css %}
+<style>
+    .register-section {
+        padding: 4rem 0;
+        min-height: calc(100vh - 200px);
+        display: flex;
+        align-items: center;
+    }
+    .register-container {
+        max-width: 500px;
+        margin: 0 auto;
+        background: var(--gray-color);
+        padding: 2rem;
+        border-radius: 10px;
+    }
+    .dark-mode .register-container {
+        background: rgba(255, 255, 255, 0.1);
+    }
+    .register-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .register-header h1 {
+        margin-bottom: 0.5rem;
+    }
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+    .form-group input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background: var(--white-color);
+    }
+    .dark-mode .form-group input {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.1);
+        color: var(--white-color);
+    }
+    .form-group input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+    }
+    .form-group .help-text {
+        font-size: 0.875rem;
+        color: var(--text-muted);
+        margin-top: 0.25rem;
+    }
+    .form-actions {
+        margin-top: 2rem;
+    }
+    .form-actions .btn {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+    .form-footer {
+        text-align: center;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    .dark-mode .form-footer {
+        border-top-color: rgba(255, 255, 255, 0.1);
+    }
+    .error-list {
+        background: #f8d7da;
+        color: #721c24;
+        padding: 1rem;
+        border-radius: 5px;
+        margin-bottom: 1rem;
+    }
+    .error-list ul {
+        margin: 0;
+        padding-left: 1.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Register Section -->
+<section class="register-section">
+    <div class="container">
+        <div class="register-container" data-aos="fade-up">
+            <div class="register-header">
+                <h1>Create Account</h1>
+                <p>Join our car rental community</p>
+            </div>
+
+            {% if form.errors %}
+            <div class="error-list">
+                <ul>
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li>{{ field.label }}: {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" name="username" id="username" required autofocus>
+                    <div class="help-text">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" name="email" id="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="first_name">First Name</label>
+                    <input type="text" name="first_name" id="first_name">
+                </div>
+
+                <div class="form-group">
+                    <label for="last_name">Last Name</label>
+                    <input type="text" name="last_name" id="last_name">
+                </div>
+
+                <div class="form-group">
+                    <label for="password1">Password</label>
+                    <input type="password" name="password1" id="password1" required>
+                    <div class="help-text">
+                        <ul>
+                            <li>Your password can't be too similar to your other personal information.</li>
+                            <li>Your password must contain at least 8 characters.</li>
+                            <li>Your password can't be a commonly used password.</li>
+                            <li>Your password can't be entirely numeric.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password2">Confirm Password</label>
+                    <input type="password" name="password2" id="password2" required>
+                    <div class="help-text">Enter the same password as before, for verification.</div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn primary-btn">Register</button>
+                </div>
+
+                <div class="form-footer">
+                    <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %} 
