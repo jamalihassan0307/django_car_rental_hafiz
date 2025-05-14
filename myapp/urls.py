@@ -22,4 +22,5 @@ urlpatterns = [
     path('car/add/', views.add_car, name='add_car'),
     path('car/edit/<int:car_id>/', views.edit_car, name='edit_car'),
     path('car/delete/<int:car_id>/', views.delete_car, name='delete_car'),
+    path('api/cars/', views.get_cars_api, name='get_cars_api'),
 ]

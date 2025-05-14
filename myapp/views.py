@@ -150,3 +150,40 @@ def delete_car(request, car_id):
     car.delete()
     messages.success(request, 'Car deleted successfully!')
     return redirect('cars')
+
+def get_cars_api(request):
+    car_type = request.GET.get('type', 'all')
+    price_range = request.GET.get('price_range', 'all')
+    
+    cars = Car.objects.all()
+    
+    # Filter by car type
+    if car_type != 'all':
+        cars = cars.filter(car_type=car_type)
+    
+    # Filter by price range
+    if price_range != 'all':
+        price_ranges = {
+            '0-100': (0, 100),
+            '101-200': (101, 200),
+            '201-300': (201, 300),
+            '301-up': (301, float('inf'))
+        }
+        if price_range in price_ranges:
+            min_price, max_price = price_ranges[price_range]
+            if max_price == float('inf'):
+                cars = cars.filter(price_per_day__gte=min_price)
+            else:
+                cars = cars.filter(price_per_day__gte=min_price, price_per_day__lte=max_price)
+    
+    cars_data = [{
+        'id': car.id,
+        'name': car.name,
+        'car_type': car.get_car_type_display(),
+        'description': car.description,
+        'price_per_day': float(car.price_per_day),
+        'image': car.image.url if car.image else '',
+        'is_available': car.is_available
+    } for car in cars]
+    
+    return JsonResponse({'cars': cars_data})
