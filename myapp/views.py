@@ -7,6 +7,7 @@ from .models import Car, Booking, Review, Contact, UserProfile
 from django.core.paginator import Paginator
 from datetime import datetime
 from decimal import Decimal
+from django.http import JsonResponse
 
 def home(request):
     featured_cars = Car.objects.filter(is_available=True)[:3]
@@ -170,3 +171,80 @@ def edit_profile(request):
         return redirect('profile')
     
     return render(request, 'myapp/edit_profile.html', {'profile': profile})
+
+def is_admin(user):
+    try:
+        return user.is_authenticated and user.userprofile.role == 'admin'
+    except UserProfile.DoesNotExist:
+        return False
+
+def cars_view(request):
+    cars = Car.objects.all()
+    is_admin_user = is_admin(request.user)
+    context = {
+        'cars': cars,
+        'is_admin': is_admin_user
+    }
+    return render(request, 'cars.html', context)
+
+@login_required
+def add_car(request):
+    if not is_admin(request.user):
+        messages.error(request, 'You do not have permission to add cars.')
+        return redirect('cars')
+    
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        car_type = request.POST.get('car_type')
+        description = request.POST.get('description')
+        price_per_day = request.POST.get('price_per_day')
+        image = request.FILES.get('image')
+        is_available = request.POST.get('is_available') == 'on'
+        
+        car = Car.objects.create(
+            name=name,
+            car_type=car_type,
+            description=description,
+            price_per_day=price_per_day,
+            image=image,
+            is_available=is_available
+        )
+        messages.success(request, 'Car added successfully!')
+        return redirect('cars')
+    
+    return render(request, 'add_car.html')
+
+@login_required
+def edit_car(request, car_id):
+    if not is_admin(request.user):
+        messages.error(request, 'You do not have permission to edit cars.')
+        return redirect('cars')
+    
+    car = get_object_or_404(Car, id=car_id)
+    
+    if request.method == 'POST':
+        car.name = request.POST.get('name')
+        car.car_type = request.POST.get('car_type')
+        car.description = request.POST.get('description')
+        car.price_per_day = request.POST.get('price_per_day')
+        car.is_available = request.POST.get('is_available') == 'on'
+        
+        if 'image' in request.FILES:
+            car.image = request.FILES['image']
+        
+        car.save()
+        messages.success(request, 'Car updated successfully!')
+        return redirect('cars')
+    
+    return render(request, 'edit_car.html', {'car': car})
+
+@login_required
+def delete_car(request, car_id):
+    if not is_admin(request.user):
+        messages.error(request, 'You do not have permission to delete cars.')
+        return redirect('cars')
+    
+    car = get_object_or_404(Car, id=car_id)
+    car.delete()
+    messages.success(request, 'Car deleted successfully!')
+    return redirect('cars')
