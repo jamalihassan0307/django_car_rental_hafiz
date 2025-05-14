@@ -1,0 +1,96 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block title %}Cars - Car Rental Service{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/cars.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Cars Section -->
+<section class="car-list">
+    <div class="container">
+        <h1 class="section-title" data-aos="fade-up">Our Cars</h1>
+        <p class="section-subtitle" data-aos="fade-up">Choose from our wide selection of cars for your next journey.</p>
+
+        <!-- Car Filters -->
+        <div class="car-filters" data-aos="fade-up">
+            <select id="carType" class="filter-select">
+                <option value="all">All Types</option>
+                <option value="luxury">Luxury</option>
+                <option value="sports">Sports</option>
+                <option value="suv">SUV</option>
+                <option value="sedan">Sedan</option>
+            </select>
+
+            <select id="priceRange" class="filter-select">
+                <option value="all">All Prices</option>
+                <option value="0-50">$0 - $50</option>
+                <option value="51-100">$51 - $100</option>
+                <option value="101-200">$101 - $200</option>
+                <option value="201-500">$201 - $500</option>
+            </select>
+
+            <button id="refreshCars" class="btn outline-btn">
+                <i class="fas fa-sync-alt"></i> Reset Filters
+            </button>
+        </div>
+
+        <!-- Cars Grid -->
+        <div id="carsGrid" class="cars-grid">
+            {% for car in cars %}
+            <div class="car-card" data-aos="fade-up">
+                <div class="car-image-container">
+                    <img src="{{ car.image.url }}" alt="{{ car.name }}" class="car-image">
+                    {% if car.is_available %}
+                        <span class="car-distance">Available</span>
+                    {% else %}
+                        <span class="car-distance">Booked</span>
+                    {% endif %}
+                </div>
+                <div class="car-details">
+                    <h2 class="car-name">{{ car.name }}</h2>
+                    <p>{{ car.description|truncatewords:20 }}</p>
+                    <div class="car-info">
+                        <p class="car-price">${{ car.price_per_day }}/Day</p>
+                        <a href="{% url 'car_detail' car.id %}" class="learn-more">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="no-cars-found">
+                <i class="fas fa-car"></i>
+                <h3>No cars found</h3>
+                <p>Try adjusting your filters or check back later.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if cars.has_other_pages %}
+        <div class="pagination">
+            {% if cars.has_previous %}
+                <a href="?page={{ cars.previous_page_number }}" class="btn outline-btn">&laquo; Previous</a>
+            {% endif %}
+
+            {% for num in cars.paginator.page_range %}
+                {% if cars.number == num %}
+                    <span class="btn primary-btn">{{ num }}</span>
+                {% else %}
+                    <a href="?page={{ num }}" class="btn outline-btn">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if cars.has_next %}
+                <a href="?page={{ cars.next_page_number }}" class="btn outline-btn">Next &raquo;</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/cars.js' %}"></script>
+{% endblock %} 
