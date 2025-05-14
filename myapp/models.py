@@ -14,8 +14,13 @@ class UserProfile(models.Model):
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='user')
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        verbose_name = 'User Profile'
+        verbose_name_plural = 'User Profiles'
+        ordering = ['-created_at']
+
     def __str__(self):
-        return self.user.username
+        return f"{self.user.username}'s Profile"
 
 class Car(models.Model):
     CAR_TYPES = (
@@ -33,6 +38,11 @@ class Car(models.Model):
     is_available = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Car'
+        verbose_name_plural = 'Cars'
+        ordering = ['-created_at']
 
     def __str__(self):
         return self.name
