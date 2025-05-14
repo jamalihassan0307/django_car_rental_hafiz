@@ -37,7 +37,7 @@
 .filter-select option {
     background-color: var(--light-color);
     color: var(--dark-color);
-}
+}j
 
 .dark-mode .filter-select option {
     background-color: var(--dark-color);
