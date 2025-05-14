@@ -1,0 +1,180 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block title %}{{ car.name }} - Car Rental Service{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/cars.css' %}">
+<style>
+    .car-detail-section {
+        padding: 4rem 0;
+    }
+    .car-detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        align-items: start;
+    }
+    .car-detail-image {
+        width: 100%;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .booking-form {
+        background: var(--gray-color);
+        padding: 2rem;
+        border-radius: 10px;
+    }
+    .dark-mode .booking-form {
+        background: rgba(255, 255, 255, 0.1);
+    }
+    .reviews-section {
+        margin-top: 4rem;
+    }
+    .review-card {
+        background: var(--gray-color);
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+    }
+    .dark-mode .review-card {
+        background: rgba(255, 255, 255, 0.1);
+    }
+    .rating {
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+    }
+    @media (max-width: 768px) {
+        .car-detail-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Car Detail Section -->
+<section class="car-detail-section">
+    <div class="container">
+        <div class="car-detail-grid">
+            <!-- Car Image and Details -->
+            <div class="car-info" data-aos="fade-right">
+                <img src="{{ car.image.url }}" alt="{{ car.name }}" class="car-detail-image">
+                <div class="car-details mt-4">
+                    <h1>{{ car.name }}</h1>
+                    <p class="car-price">${{ car.price_per_day }}/Day</p>
+                    <p>{{ car.description }}</p>
+                    <div class="car-features mt-4">
+                        <h3>Features:</h3>
+                        <ul>
+                            <li><i class="fas fa-car"></i> Type: {{ car.get_car_type_display }}</li>
+                            <li><i class="fas fa-check-circle"></i> Status: {% if car.is_available %}Available{% else %}Not Available{% endif %}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Booking Form -->
+            <div class="booking-section" data-aos="fade-left">
+                {% if user.is_authenticated %}
+                    {% if car.is_available %}
+                        <form method="post" action="{% url 'book_car' car.id %}" class="booking-form">
+                            {% csrf_token %}
+                            <h2>Book This Car</h2>
+                            <div class="form-group">
+                                <label for="start_date">Start Date</label>
+                                <input type="date" id="start_date" name="start_date" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="end_date">End Date</label>
+                                <input type="date" id="end_date" name="end_date" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn primary-btn w-100">Book Now</button>
+                        </form>
+                    {% else %}
+                        <div class="booking-form text-center">
+                            <h2>Currently Unavailable</h2>
+                            <p>This car is currently not available for booking. Please check back later or explore other options.</p>
+                            <a href="{% url 'cars' %}" class="btn outline-btn">View Other Cars</a>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="booking-form text-center">
+                        <h2>Login Required</h2>
+                        <p>Please login to book this car.</p>
+                        <a href="{% url 'login' %}?next={{ request.path }}" class="btn primary-btn">Login Now</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Reviews Section -->
+        <div class="reviews-section">
+            <h2 class="section-title" data-aos="fade-up">Reviews</h2>
+            
+            {% if user.is_authenticated %}
+                <div class="add-review-form mb-4" data-aos="fade-up">
+                    <form method="post" action="{% url 'add_review' car.id %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="rating">Rating</label>
+                            <select name="rating" id="rating" class="form-control" required>
+                                <option value="5">⭐⭐⭐⭐⭐ (5)</option>
+                                <option value="4">⭐⭐⭐⭐ (4)</option>
+                                <option value="3">⭐⭐⭐ (3)</option>
+                                <option value="2">⭐⭐ (2)</option>
+                                <option value="1">⭐ (1)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="comment">Comment</label>
+                            <textarea name="comment" id="comment" rows="3" class="form-control" required></textarea>
+                        </div>
+                        <button type="submit" class="btn primary-btn">Submit Review</button>
+                    </form>
+                </div>
+            {% endif %}
+
+            <div class="reviews-list">
+                {% for review in reviews %}
+                <div class="review-card" data-aos="fade-up">
+                    <div class="rating">
+                        {% for i in ""|ljust:review.rating %}⭐{% endfor %}
+                    </div>
+                    <p>{{ review.comment }}</p>
+                    <small>By {{ review.user.username }} on {{ review.created_at|date:"F d, Y" }}</small>
+                </div>
+                {% empty %}
+                <div class="text-center" data-aos="fade-up">
+                    <p>No reviews yet. Be the first to review this car!</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const startDate = document.getElementById('start_date');
+        const endDate = document.getElementById('end_date');
+
+        if (startDate && endDate) {
+            // Set minimum date as today
+            const today = new Date().toISOString().split('T')[0];
+            startDate.min = today;
+            endDate.min = today;
+
+            // Update end date minimum when start date changes
+            startDate.addEventListener('change', function() {
+                endDate.min = this.value;
+                if (endDate.value && endDate.value < this.value) {
+                    endDate.value = this.value;
+                }
+            });
+        }
+    });
+</script>
+{% endblock %} 
