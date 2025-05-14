@@ -4,47 +4,24 @@
 {% block title %}Add New Car - Car Rental Service{% endblock %}
 
 {% block extra_css %}
-<style>
-    .add-car-form {
-        max-width: 800px;
-        margin: 2rem auto;
-        padding: 2rem;
-        background: #fff;
-        border-radius: 10px;
-        box-shadow: 0 0 20px rgba(0,0,0,0.1);
-    }
-    
-    .form-group {
-        margin-bottom: 1.5rem;
-    }
-    
-    .form-control {
-        border-radius: 5px;
-    }
-    
-    .btn-submit {
-        width: 100%;
-        padding: 0.8rem;
-        font-size: 1.1rem;
-    }
-</style>
+<link rel="stylesheet" href="{% static 'css/car_forms.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="add-car-form" data-aos="fade-up">
-        <h2 class="text-center mb-4">Add New Car</h2>
+<div class="car-form-container">
+    <div class="car-form" data-aos="fade-up">
+        <h1 class="form-title">Add New Car</h1>
         
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             
             <div class="form-group">
-                <label for="name">Car Name</label>
-                <input type="text" class="form-control" id="name" name="name" required>
+                <label class="form-label" for="name">Car Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Enter car name" required>
             </div>
             
             <div class="form-group">
-                <label for="car_type">Car Type</label>
+                <label class="form-label" for="car_type">Car Type</label>
                 <select class="form-control" id="car_type" name="car_type" required>
                     <option value="">Select Car Type</option>
                     <option value="luxury">Luxury</option>
@@ -55,29 +32,101 @@
             </div>
             
             <div class="form-group">
-                <label for="description">Description</label>
-                <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+                <label class="form-label" for="description">Description</label>
+                <textarea class="form-control" id="description" name="description" 
+                          placeholder="Enter car description" rows="4" required></textarea>
             </div>
             
             <div class="form-group">
-                <label for="price_per_day">Price Per Day ($)</label>
-                <input type="number" class="form-control" id="price_per_day" name="price_per_day" required>
+                <label class="form-label" for="price_per_day">Price Per Day ($)</label>
+                <input type="number" class="form-control" id="price_per_day" 
+                       name="price_per_day" placeholder="Enter daily rental price" required>
             </div>
             
             <div class="form-group">
-                <label for="image">Car Image</label>
-                <input type="file" class="form-control" id="image" name="image" required>
-            </div>
-            
-            <div class="form-group">
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="is_available" name="is_available" checked>
-                    <label class="custom-control-label" for="is_available">Available for Rent</label>
+                <label class="form-label" for="image">Car Image</label>
+                <div class="image-input-container" id="imageInputContainer">
+                    <i class="fas fa-cloud-upload-alt fa-3x mb-3"></i>
+                    <p>Click to upload or drag and drop</p>
+                    <p class="help-text">Supported formats: JPG, PNG, WEBP</p>
+                    <input type="file" class="form-control" id="image" name="image" 
+                           accept="image/*" required style="display: none;">
+                </div>
+                <div id="imagePreview" class="image-preview" style="display: none;">
+                    <img src="" alt="Car Preview" id="previewImage">
                 </div>
             </div>
             
-            <button type="submit" class="btn btn-primary btn-submit">Add Car</button>
+            <div class="form-group">
+                <label class="custom-checkbox">
+                    <input type="checkbox" id="is_available" name="is_available" checked>
+                    <span>Available for Rent</span>
+                </label>
+            </div>
+            
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-plus-circle"></i> Add Car
+            </button>
         </form>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const imageInput = document.getElementById('image');
+    const imagePreview = document.getElementById('imagePreview');
+    const previewImage = document.getElementById('previewImage');
+    const imageInputContainer = document.getElementById('imageInputContainer');
+
+    // Handle click on container
+    imageInputContainer.addEventListener('click', () => {
+        imageInput.click();
+    });
+
+    // Handle drag and drop
+    imageInputContainer.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        imageInputContainer.style.borderColor = 'var(--primary-color)';
+        imageInputContainer.style.background = 'rgba(var(--primary-rgb), 0.05)';
+    });
+
+    imageInputContainer.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        imageInputContainer.style.borderColor = 'var(--border-color)';
+        imageInputContainer.style.background = 'transparent';
+    });
+
+    imageInputContainer.addEventListener('drop', (e) => {
+        e.preventDefault();
+        imageInputContainer.style.borderColor = 'var(--border-color)';
+        imageInputContainer.style.background = 'transparent';
+        
+        if (e.dataTransfer.files.length) {
+            imageInput.files = e.dataTransfer.files;
+            handleImageSelect(e.dataTransfer.files[0]);
+        }
+    });
+
+    // Handle file select
+    imageInput.addEventListener('change', (e) => {
+        if (e.target.files.length) {
+            handleImageSelect(e.target.files[0]);
+        }
+    });
+
+    function handleImageSelect(file) {
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImage.src = e.target.result;
+                imagePreview.style.display = 'block';
+                imageInputContainer.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+});
+</script>
 {% endblock %} 
