@@ -4,101 +4,31 @@
 {% block title %}Profile - Car Rental Service{% endblock %}
 
 {% block extra_css %}
-<style>
-    .profile-section {
-        padding: 4rem 0;
-    }
-    .profile-grid {
-        display: grid;
-        grid-template-columns: 300px 1fr;
-        gap: 2rem;
-    }
-    .profile-sidebar {
-        background: var(--gray-color);
-        padding: 2rem;
-        border-radius: 10px;
-        height: fit-content;
-    }
-    .dark-mode .profile-sidebar {
-        background: rgba(255, 255, 255, 0.1);
-    }
-    .profile-image {
-        width: 150px;
-        height: 150px;
-        border-radius: 50%;
-        margin: 0 auto 1rem;
-        display: block;
-        object-fit: cover;
-    }
-    .profile-info h2 {
-        text-align: center;
-        margin-bottom: 1rem;
-    }
-    .profile-stats {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-        margin: 1rem 0;
-    }
-    .stat-item {
-        text-align: center;
-        padding: 1rem;
-        background: rgba(0, 0, 0, 0.05);
-        border-radius: 5px;
-    }
-    .dark-mode .stat-item {
-        background: rgba(255, 255, 255, 0.05);
-    }
-    .stat-item h3 {
-        font-size: 1.5rem;
-        margin-bottom: 0.5rem;
-    }
-    .profile-actions {
-        margin-top: 2rem;
-    }
-    .profile-actions .btn {
-        width: 100%;
-        margin-bottom: 1rem;
-    }
-    .profile-content {
-        background: var(--gray-color);
-        padding: 2rem;
-        border-radius: 10px;
-    }
-    .dark-mode .profile-content {
-        background: rgba(255, 255, 255, 0.1);
-    }
-    .profile-section h3 {
-        margin-bottom: 1rem;
-    }
-    @media (max-width: 768px) {
-        .profile-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-</style>
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
 {% endblock %}
 
 {% block content %}
-<!-- Profile Section -->
 <section class="profile-section">
     <div class="container">
         <div class="profile-grid">
             <!-- Profile Sidebar -->
             <div class="profile-sidebar" data-aos="fade-right">
-                <div class="profile-info">
+                <div class="profile-image-container">
                     {% if user.userprofile.profile_image %}
                         <img src="{{ user.userprofile.profile_image.url }}" alt="Profile" class="profile-image">
                     {% else %}
-                        <i class="fas fa-user-circle fa-6x" style="display: block; text-align: center; margin-bottom: 1rem;"></i>
+                        <i class="fas fa-user-circle profile-image-icon"></i>
                     {% endif %}
-                    <h2>{{ user.username }}</h2>
-                    <p class="text-center">{{ user.email }}</p>
+                </div>
+
+                <div class="profile-info">
+                    <h2>{{ user.get_full_name|default:user.username }}</h2>
+                    <p>{{ user.email }}</p>
                 </div>
 
                 <div class="profile-stats">
                     <div class="stat-item">
-                        <h3>{{ user.userprofile.role }}</h3>
+                        <h3>{{ user.userprofile.role|title }}</h3>
                         <p>Role</p>
                     </div>
                     <div class="stat-item">
@@ -108,7 +38,9 @@
                 </div>
 
                 <div class="profile-actions">
-                    <a href="{% url 'edit_profile' %}" class="btn primary-btn">Edit Profile</a>
+                    <a href="{% url 'edit_profile' %}" class="btn">
+                        <i class="fas fa-user-edit"></i> Edit Profile
+                    </a>
                 </div>
             </div>
 
@@ -117,23 +49,27 @@
                 <h3>Personal Information</h3>
                 <div class="info-grid">
                     <div class="info-item">
-                        <strong>Full Name:</strong>
-                        <p>{{ user.get_full_name|default:user.username }}</p>
+                        <strong>Full Name</strong>
+                        <p>{{ user.get_full_name|default:"Not provided" }}</p>
                     </div>
                     <div class="info-item">
-                        <strong>Email:</strong>
-                        <p>{{ user.email }}</p>
+                        <strong>Username</strong>
+                        <p>{{ user.username }}</p>
                     </div>
                     <div class="info-item">
-                        <strong>Phone:</strong>
+                        <strong>Email Address</strong>
+                        <p>{{ user.email|default:"Not provided" }}</p>
+                    </div>
+                    <div class="info-item">
+                        <strong>Phone Number</strong>
                         <p>{{ user.userprofile.phone_number|default:"Not provided" }}</p>
                     </div>
                     <div class="info-item">
-                        <strong>Address:</strong>
+                        <strong>Address</strong>
                         <p>{{ user.userprofile.address|default:"Not provided" }}</p>
                     </div>
                     <div class="info-item">
-                        <strong>Member Since:</strong>
+                        <strong>Member Since</strong>
                         <p>{{ user.date_joined|date:"F d, Y" }}</p>
                     </div>
                 </div>
