@@ -98,18 +98,17 @@
 
                 <div class="profile-stats">
                     <div class="stat-item">
-                        <h3>{{ total_bookings }}</h3>
-                        <p>Bookings</p>
+                        <h3>{{ user.userprofile.role }}</h3>
+                        <p>Role</p>
                     </div>
                     <div class="stat-item">
-                        <h3>{{ total_reviews }}</h3>
-                        <p>Reviews</p>
+                        <h3>{{ user.date_joined|date:"M Y" }}</h3>
+                        <p>Member Since</p>
                     </div>
                 </div>
 
                 <div class="profile-actions">
                     <a href="{% url 'edit_profile' %}" class="btn primary-btn">Edit Profile</a>
-                    <a href="{% url 'my_bookings' %}" class="btn outline-btn">My Bookings</a>
                 </div>
             </div>
 
@@ -137,37 +136,6 @@
                         <strong>Member Since:</strong>
                         <p>{{ user.date_joined|date:"F d, Y" }}</p>
                     </div>
-                </div>
-
-                <h3 class="mt-4">Recent Bookings</h3>
-                <div class="recent-bookings">
-                    {% for booking in recent_bookings %}
-                    <div class="booking-card">
-                        <div class="booking-info">
-                            <h4>{{ booking.car.name }}</h4>
-                            <p>{{ booking.start_date|date:"M d, Y" }} - {{ booking.end_date|date:"M d, Y" }}</p>
-                            <span class="status status-{{ booking.status }}">{{ booking.get_status_display }}</span>
-                        </div>
-                        <a href="{% url 'booking_detail' booking.id %}" class="btn outline-btn">View Details</a>
-                    </div>
-                    {% empty %}
-                    <p>No recent bookings found.</p>
-                    {% endfor %}
-                </div>
-
-                <h3 class="mt-4">Recent Reviews</h3>
-                <div class="recent-reviews">
-                    {% for review in recent_reviews %}
-                    <div class="review-card">
-                        <div class="rating">
-                            {% for i in ""|ljust:review.rating %}⭐{% endfor %}
-                        </div>
-                        <p>{{ review.comment }}</p>
-                        <small>For {{ review.car.name }} on {{ review.created_at|date:"F d, Y" }}</small>
-                    </div>
-                    {% empty %}
-                    <p>No reviews yet.</p>
-                    {% endfor %}
                 </div>
             </div>
         </div>
