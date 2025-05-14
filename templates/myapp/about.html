@@ -1,0 +1,101 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block title %}About - Car Rental Service{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/about.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- About Section -->
+<section class="about">
+    <div class="container about-content">
+        <div class="about-text" data-aos="fade-right">
+            <h1>About Our Car Rental Service</h1>
+            <p>Welcome to Car Rental Service, your trusted partner in providing premium car rental solutions. With over <strong>10</strong> years of experience in the industry, we pride ourselves on offering exceptional service and a wide range of vehicles to meet your needs.</p>
+            <p>Our fleet includes everything from economy cars to luxury vehicles, ensuring that we have the perfect car for every occasion and budget.</p>
+            <div class="stats">
+                <div class="stat-item">
+                    <h3><strong>1000+</strong></h3>
+                    <p>Happy Customers</p>
+                </div>
+                <div class="stat-item">
+                    <h3><strong>500+</strong></h3>
+                    <p>Cars in Fleet</p>
+                </div>
+                <div class="stat-item">
+                    <h3><strong>24/7</strong></h3>
+                    <p>Customer Support</p>
+                </div>
+            </div>
+            <a href="{% url 'cars' %}" class="btn primary-btn">View Our Fleet</a>
+        </div>
+        <div class="about-image" data-aos="fade-left">
+            <img src="{% static 'assets/car2.png' %}" alt="About Us">
+        </div>
+    </div>
+</section>
+
+<!-- Experience Section -->
+<section class="experience">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="main-stat">
+                <div class="stat-card">
+                    <h1>10+</h1>
+                    <p>Years of Experience</p>
+                </div>
+            </div>
+            <div class="stats-column">
+                <div class="stat-card">
+                    <h1>50+</h1>
+                    <p>Locations</p>
+                </div>
+                <div class="stat-card">
+                    <h1>24/7</h1>
+                    <p>Support Available</p>
+                </div>
+            </div>
+            <div class="stats-column">
+                <div class="stat-card">
+                    <h1>100%</h1>
+                    <p>Satisfied Customers</p>
+                </div>
+                <div class="stat-card">
+                    <h1>500+</h1>
+                    <p>Cars Available</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us Section -->
+<section class="why-choose-us">
+    <div class="container">
+        <h2 class="section-title" data-aos="fade-up">Why Choose Us</h2>
+        <div class="features-grid">
+            <div class="feature-card" data-aos="fade-up">
+                <i class="fas fa-car"></i>
+                <h3>Latest Models</h3>
+                <p>Our fleet consists of the latest car models, ensuring you get the best driving experience.</p>
+            </div>
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Safe & Secure</h3>
+                <p>All our cars are regularly maintained and come with comprehensive insurance coverage.</p>
+            </div>
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                <i class="fas fa-headset"></i>
+                <h3>24/7 Support</h3>
+                <p>Our customer support team is available round the clock to assist you.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/about.js' %}"></script>
+{% endblock %} 
