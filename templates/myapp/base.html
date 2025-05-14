@@ -117,19 +117,19 @@
                 <div class="links-column">
                     <h2>Our Services</h2>
                     <ul>
-                        <li><a href="#">Car Rental</a></li>
-                        <li><a href="#">Car Maintenance</a></li>
-                        <li><a href="#">Airport Transfer</a></li>
-                        <li><a href="#">24/7 Support</a></li>
+                        <li><a href="{% url 'cars' %}">Car Rental</a></li>
+                        <li><a href="{% url 'about' %}">About Us</a></li>
+                        <li><a href="{% url 'cars' %}">View Cars</a></li>
                     </ul>
                 </div>
                 
                 <div class="links-column">
-                    <h2>Download App</h2>
-                    <div class="store-buttons">
-                        <a href="#"><img src="{% static 'website/app_store.png' %}" alt="App Store"></a>
-                        <a href="#"><img src="{% static 'website/play_store.png' %}" alt="Play Store"></a>
-                    </div>
+                    <h2>Contact Info</h2>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> +1 234 567 8900</li>
+                        <li><i class="fas fa-envelope"></i> info@carrentalservices.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i> United States</li>
+                    </ul>
                 </div>
             </div>
         </div>
