@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.contrib.auth import logout
 from .models import Car, UserProfile
 from django.core.paginator import Paginator
 from datetime import datetime
@@ -31,6 +32,13 @@ def register(request):
     else:
         form = UserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
+
+def custom_logout(request):
+    if request.method == 'POST':
+        logout(request)
+        messages.success(request, 'You have been successfully logged out.')
+        return redirect('home')
+    return redirect('home')
 
 @login_required
 def profile(request):
