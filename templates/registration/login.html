@@ -75,6 +75,52 @@
         border-radius: 5px;
         margin-bottom: 1rem;
     }
+    .social-container {
+        margin-top: 1.5rem;
+        text-align: center;
+    }
+    
+    .google-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 0.75rem 1.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .dark-mode .google-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    .google-btn:hover {
+        background: #f5f5f5;
+    }
+    
+    .dark-mode .google-btn:hover {
+        background: rgba(255, 255, 255, 0.15);
+    }
+    
+    .google-btn img {
+        width: 18px;
+        height: 18px;
+        margin-right: 10px;
+    }
+    
+    .google-btn a {
+        text-decoration: none;
+        color: #333;
+        display: flex;
+        align-items: center;
+    }
+    
+    .dark-mode .google-btn a {
+        color: #fff;
+    }
 </style>
 {% endblock %}
 
@@ -109,6 +155,15 @@
                 <div class="form-actions">
                     <button type="submit" class="btn primary-btn">Login</button>
                     <input type="hidden" name="next" value="{{ next }}">
+                </div>
+
+                <div class="social-container">
+                    <button class="google-btn">
+                        <a href="{% url 'social:begin' 'google-oauth2' %}">
+                            <img src="https://www.google.com/favicon.ico" alt="Google">
+                            Sign in with Google
+                        </a>
+                    </button>
                 </div>
 
                 <div class="form-footer">
